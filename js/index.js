@@ -1,14 +1,15 @@
-window.addEventListener('load',function(){
-  document.querySelector('body').classList.add("loaded")  
-});
+// window.addEventListener('load',function(){
+//   document.querySelector('body').classList.add("loaded")  
+// });
 
 let page = 1;
 //Берём данные с API
 async function getGamesData(page) {
-  let response = await fetch(`https://api.rawg.io/api/games?page=${page}`)
-  let data = await response.json()
-  console.log(data);
-  return data;
+    let response = await fetch(`https://api.rawg.io/api/games?page=${page}`)
+    let data = await response.json()
+
+    console.log(data);
+    return data
 }
 //Декоратор для загрузки данных с https://api.rawg.io/api/games
 function cachingDecorator(func) {
@@ -34,11 +35,14 @@ const getCount = function() {
 };
 getCount();
 
-const updateBlock = function (pageNum) {  
-  let nextPage = pageNum //Смена страницы
+const updateBlock = function (nav) {
+  let nextPage = (nav == 'next') ? page = page + 1 : page = page - 1 //Смена страницы
   let whereToInsert = document.getElementById('row-before') //Ищем, куда добавлять блоки
   let preload = () => document.querySelector('body').classList.add("loaded") //Функция preloaderа
   
+  const button = document.getElementById('previousButton')
+  if (page > 1) {button.disabled = false} else {button.disabled = true} 
+
   document.querySelector('body').classList.remove("loaded") //Отобразить прелоадер для прогрузки файлов  
   getGamesData(nextPage).then(function(value) {
     //Удаление текущих страниц
