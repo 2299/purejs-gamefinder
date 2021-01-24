@@ -1,7 +1,6 @@
 // window.addEventListener('load',function(){
 //   document.querySelector('body').classList.add("loaded")  
 // });
-
 let page = 1;
 //Берём данные с API
 async function getGamesData(page) {
@@ -35,8 +34,8 @@ const getCount = function() {
 };
 getCount();
 
-const updateBlock = function (nav) {
-  let nextPage = (nav == 'next') ? page = page + 1 : page = page - 1 //Смена страницы
+const updateBlock = function (getPage) {
+  let nextPage = (getPage == 'next') ? page = page + 1 : page = page - 1 //Смена страницы
   let whereToInsert = document.getElementById('row-before') //Ищем, куда добавлять блоки
   let preload = () => document.querySelector('body').classList.add("loaded") //Функция preloaderа
   
@@ -50,61 +49,16 @@ const updateBlock = function (nav) {
       whereToInsert.removeChild(whereToInsert.childNodes[0])
     }
     for (key in value.results){
-      let getPlatforms = function() {
-        let gamePlatforms = []
-          for (keyS in value.results[key].parent_platforms) {
-            let slugValue = value.results[key].parent_platforms[keyS].platform.slug
-            switch (slugValue) {
-              case 'xbox':
-                gamePlatforms = '<div class="platform_xbox platform_display"></div> ' + gamePlatforms
-                break;
-            
-              case 'playstation':
-                gamePlatforms = '<div class="platform_playstation platform_display"></div> ' + gamePlatforms
-                break;
-              
-              case 'pc':
-                gamePlatforms = '<div class="platform_pc platform_display"></div> ' + gamePlatforms
-                break;
-
-              case 'ios':
-                gamePlatforms = '<div class="platform_ios platform_display"></div> ' + gamePlatforms
-                break;
-
-              case 'mac':
-                gamePlatforms = '<div class="platform_mac platform_display"></div> ' + gamePlatforms
-                break;
-
-              case 'android':
-                gamePlatforms = '<div class="platform_android platform_display"></div> ' + gamePlatforms
-                break;
-
-              case 'linux':
-                gamePlatforms = '<div class="platform_linux platform_display"></div> ' + gamePlatforms
-                break;
-              
-              case 'nintendo':
-                gamePlatforms = '<div class="platform_nintendo platform_display"></div> ' + gamePlatforms
-                break;
-            
-              default:
-                gamePlatforms = value.results[key].parent_platforms[keyS].platform.name + ' ' + gamePlatforms
-            }
-          }
-        
-        return gamePlatforms
-      }
-
       //-----------Добавление новых данных---------------
       let div = document.createElement('div')
       div.className = 'col'
       div.innerHTML = `
-        <div class="card">
+        <div class="card text-white bg-dark mb-3" style="max-width: 18rem">
           <img src="${value.results[key].background_image}" class="card-img-top" >
           <div class="card-body">
             <h5 class="card-title">${value.results[key].name}</h5>
-            <b class="platforms">Платформы: ${getPlatforms()} </b>
             <p class="card-text">Дата выхода: ${value.results[key].released}</p>
+            <b class="platforms">Платформы: ${getPlatforms(value)} </b>
           </div>
         </div>`
         whereToInsert.insertBefore(div, whereToInsert.childNodes[0])
@@ -117,61 +71,25 @@ const updateBlock = function (nav) {
 const createBlock = function() {
   getGamesData(page).then(function(value) {
     for (key in value.results){
-      let getPlatforms = function() {
-        let gamePlatforms = []
-          for (keyS in value.results[key].parent_platforms) {
-            let slugValue = value.results[key].parent_platforms[keyS].platform.slug
-            switch (slugValue) {
-
-              case 'xbox':
-                gamePlatforms = '<div class="platform_xbox platform_display"></div> ' + gamePlatforms
-                break;
-            
-              case 'playstation':
-                gamePlatforms = '<div class="platform_playstation platform_display"></div> ' + gamePlatforms
-                break;
-              
-              case 'pc':
-                gamePlatforms = '<div class="platform_pc platform_display"></div> ' + gamePlatforms
-                break;
-
-              case 'ios':
-                gamePlatforms = '<div class="platform_ios platform_display"></div> ' + gamePlatforms
-                break;
-
-              case 'mac':
-                gamePlatforms = '<div class="platform_mac platform_display"></div> ' + gamePlatforms
-                break;
-
-              case 'android':
-                gamePlatforms = '<div class="platform_android platform_display"></div> ' + gamePlatforms
-                break;
-
-              case 'linux':
-                gamePlatforms = '<div class="platform_linux platform_display"></div> ' + gamePlatforms
-                break;
-              
-              case 'nintendo':
-                gamePlatforms = '<div class="platform_nintendo platform_display"></div> ' + gamePlatforms
-                break;
-            
-              default:
-                gamePlatforms = value.results[key].parent_platforms[keyS].platform.name + ' ' + gamePlatforms
-            }
-          }
-        return gamePlatforms
-      }
+    
   //-------Создаём и добавляем данные---------------
       let div = document.createElement('div')
       let whereToInsert = document.getElementById('row-before')
       div.className = 'col'
       div.innerHTML = `
-        <div class="card">
-          <img src="${value.results[key].background_image}" class="card-img-top" >
+        <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+          <img src="${value.results[key].background_image}" class="card-img-top game-image" >
           <div class="card-body">
             <h5 class="card-title">${value.results[key].name}</h5>
-            <b class="platforms" id="platforms">Платформы: ${getPlatforms()} </b>
+            <p class="card-text">Жанр: ${getGenres(value)}</p>
             <p class="card-text">Дата выхода: ${value.results[key].released}</p>
+            <b class="platforms" id="platforms">Платформы: ${getPlatforms(value)} </b>
+            <p class="card-text"><small class="text-muted">Последнее обновление ${value.results[key].updated.split("T", 1)}</small></p>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#id${value.results[key].id}" aria-expanded="false" aria-controls="id${value.results[key].id}">Подробнее</button>
+              <div class="collapse multi-collapse" id="id${value.results[key].id}">
+                <div class="card text-white bg-dark mb-3">
+                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                </div>
           </div>
         </div>`
       whereToInsert.insertBefore(div, whereToInsert.childNodes[0])
@@ -179,6 +97,60 @@ const createBlock = function() {
     }
   })
 }
+
+const getGenres = function(value){
+  let genres = []
+  for (keyS in value.results[key].genres) {
+    genres = value.results[key].genres[keyS].name + ' ' + genres
+  }
+  return genres
+}
+
+const getPlatforms = function(value) {
+  let gamePlatforms = []
+    for (keyS in value.results[key].parent_platforms) {
+      let slugValue = value.results[key].parent_platforms[keyS].platform.slug
+      switch (slugValue) {
+        case 'xbox':
+          gamePlatforms = '<div class="platform_xbox platform_display"></div> ' + gamePlatforms
+          break;
+      
+        case 'playstation':
+          gamePlatforms = '<div class="platform_playstation platform_display"></div> ' + gamePlatforms
+          break;
+        
+        case 'pc':
+          gamePlatforms = '<div class="platform_pc platform_display"></div> ' + gamePlatforms
+          break;
+
+        case 'ios':
+          gamePlatforms = '<div class="platform_ios platform_display"></div> ' + gamePlatforms
+          break;
+
+        case 'mac':
+          gamePlatforms = '<div class="platform_mac platform_display"></div> ' + gamePlatforms
+          break;
+
+        case 'android':
+          gamePlatforms = '<div class="platform_android platform_display"></div> ' + gamePlatforms
+          break;
+
+        case 'linux':
+          gamePlatforms = '<div class="platform_linux platform_display"></div> ' + gamePlatforms
+          break;
+        
+        case 'nintendo':
+          gamePlatforms = '<div class="platform_nintendo platform_display"></div> ' + gamePlatforms
+          break;
+      
+        default:
+          gamePlatforms = value.results[key].parent_platforms[keyS].platform.name + ' ' + gamePlatforms
+      }
+    }
+  
+  return gamePlatforms
+}
+
 createBlock()
 
 
