@@ -79,7 +79,7 @@ getCount();
 
 const updateBlock = function (getPage) {
   let nextPage = getPage == "next" ? (page = page + 1) : (page = page - 1); //Смена страницы
-  let whereToInsert = document.getElementById("row-before"); //Ищем, куда добавлять блоки
+  let whereToInsert = document.getElementById("col-before"); //Ищем, куда добавлять блоки
   let preload = () => document.querySelector("body").classList.add("loaded"); //Функция preloaderа
 
   const button = document.getElementById("previousButton");
