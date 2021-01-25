@@ -1,6 +1,7 @@
 // window.addEventListener('load',function(){
 //   document.querySelector('body').classList.add("loaded")
 // });
+
 window.onscroll = () => {
   toTopButton();
 };
@@ -100,21 +101,43 @@ const updateBlock = function (getPage) {
       let div = document.createElement("div");
       div.className = "col";
       div.innerHTML = `
-        <div class="card text-white bg-dark mb-3" style="max-width: 18rem">
-          <img src="${
-            value.results[key].background_image
-          }" class="card-img-top" >
-          <div class="card-body">
-            <h5 class="card-title">${value.results[key].name}</h5>
-            <p class="card-text">Дата выхода: ${value.results[key].released}</p>
-            <b class="platforms">Платформы: ${getPlatforms(value)} </b>
+      <div class="card text-white bg-dark mb-3">
+        <img id="test" src="${
+          value.results[key].background_image
+        }" class="card-img-top game-image" >
+        <div class="card-body">
+          <h5 class="card-title game-title">${value.results[key].name}</h5>
+          <div class="game-info">
+            <p class="card-text">Жанр: ${getGenres(value)}</p>
+            <p class="card-text">Дата выхода: ${
+              value.results[key].released
+            }</p>
+            <b class="platforms" id="platforms">Платформы: ${getPlatforms(
+              value
+            )} </b>
+            <p class="card-text"><small class="text-muted">Последнее обновление ${value.results[
+              key
+            ].updated.split("T", 1)}</small></p>
           </div>
-        </div>`;
+            <button class="btn btn-secondary detailed-info" type="button" data-bs-toggle="collapse" data-bs-target="#id${
+              value.results[key].id
+            }" aria-expanded="false" aria-controls="id${
+      value.results[key].id
+    }">Подробнее</button>
+            <div class="collapse multi-collapse" id="id${
+              value.results[key].id
+            }">
+              <div class="card text-white bg-dark mb-3">
+                Потом добавлю
+              </div>
+            </div>
+      </div>`;
       whereToInsert.insertBefore(div, whereToInsert.childNodes[0]);
-      // console.log(value.results[key])
+      //-----------PRELOADER ПОКА НЕ ЗАГРУЗИТСЯ ИЗОБРАЖЕНИЕ-----
+    let img = document.getElementsByTagName('img')[0]
+    img.onload = () => {document.querySelector('body').classList.add("loaded")}
     }
   });
-  setTimeout(preload, 500);
 };
 
 const createBlock = function () {
@@ -126,7 +149,7 @@ const createBlock = function () {
       div.className = "col";
       div.innerHTML = `
         <div class="card text-white bg-dark mb-3">
-          <img src="${
+          <img id="test" src="${
             value.results[key].background_image
           }" class="card-img-top game-image" >
           <div class="card-body">
@@ -159,6 +182,9 @@ const createBlock = function () {
       whereToInsert.insertBefore(div, whereToInsert.childNodes[0]);
       // console.log(value.results[key])
     }
+    //-----------PRELOADER ПОКА НЕ ЗАГРУЗИТСЯ ИЗОБРАЖЕНИЕ-----
+    let img = document.getElementsByTagName('img')[0]
+    img.onload = () => {document.querySelector('body').classList.add("loaded")}
   });
 };
 
