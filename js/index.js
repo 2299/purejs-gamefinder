@@ -1,12 +1,5 @@
-// window.addEventListener('load',function(){
-//   document.querySelector('body').classList.add("loaded")
-// });
-
-window.onscroll = () => {
-  toTopButton();
-};
 let page = 1;
-//Берём данные с API
+// --------------- GET DATA FROM RAWG API !!!!! ---------------/
 async function getGamesData(page) {
   let response = await fetch(`https://api.rawg.io/api/games?page=${page}`);
   let data = await response.json();
@@ -14,41 +7,36 @@ async function getGamesData(page) {
   console.log(data);
   return data;
 }
-//https://api.rawg.io/api/games?search=%27dota%202%27&search_exact=%27true%27
-
+// --------------- Handling keypress in search bar w/ timeOut 1s ---------------/
 let timer,
   timeoutVal = 1000;
 const gameName = document.getElementById("gameNumber");
 const search = document.getElementById("showSearch");
-gameName.addEventListener("keypress", handleKeyPress);
 gameName.addEventListener("keyup", handleKeyUp);
 
-document.addEventListener('click', event => {
-  search.classList.remove('show');
+document.addEventListener("click", (event) => {
+  search.classList.remove("show");
 });
+
 function handleKeyUp(e) {
   window.clearTimeout(timer);
   timer = window.setTimeout(() => {
     if (gameName.value.length < 3) {
-      console.log('malo');
+      console.log("malo");
+    } else {
+      const url = `https://api.rawg.io/api/games?search=${gameName.value}&search_exact=true`;
+      search.classList.add("show");
+      console.log(url);
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => drawData(data));
     }
-    else {
-    const url = `https://api.rawg.io/api/games?search=${gameName.value}&search_exact=true`;
-    const form = document.getElementsByTagName("form")[0];
-    search.classList.add('show');
-    form.reset()
-    console.log(url);
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => drawData(data)
-      )};
   }, timeoutVal);
 }
 
-
-
+// --------------- Adding dropdown items --------------- /
 function drawData (data) {
-  let whereToInsert = document.getElementById("showSearch"); //Ищем, куда добавлять блоки
+  let whereToInsert = document.getElementById("showSearch"); // get location to insert data
   let countTags =  whereToInsert.getElementsByTagName('a').length;
   if (countTags > 0){
     for (let i = 0; i < countTags; i++) {
@@ -58,21 +46,18 @@ function drawData (data) {
 
   for (key in data.results) {
     console.log(data.results[key].name);
-    //-----------Добавление новых данных---------------
+    // adding new data
     let li = document.createElement("li");
     li.innerHTML = `<a class="dropdown-item" style="font-size: 12px;" href="${data.results[key].background_image}">${data.results[key].name}</a>`;
     whereToInsert.insertBefore(li, whereToInsert.childNodes[0]);
   }
 }
 
-function handleKeyPress(e) {
-  window.clearTimeout(timer);
 
-  console.log("Typing...");
-}
-//Декоратор для загрузки данных с https://api.rawg.io/api/games
+// --------------- Decorator for pages ---------------/
 function cachingDecorator(func) {
   let cache = new Map();
+
   return function (data) {
     if (cache.has(data)) {
       return cache.get(data);
@@ -85,21 +70,11 @@ function cachingDecorator(func) {
 
 getGamesData = cachingDecorator(getGamesData);
 
-//Количество игр в БД
-const getCount = function () {
-  getGamesData(page).then(function (value) {
-    // document.getElementById('quantityGames').innerHTML = value.count + ' '
-    document.getElementById("gameNumber").placeholder =
-      "В базе данных " + value.count + " игр";
-  });
-};
-getCount();
-
+// --------------- Update page witn new data ---------------/
 const updateBlock = function (getPage) {
   window.scrollTo(0, 0);
-  let nextPage = getPage == "next" ? (page = page + 1) : (page = page - 1); //Смена страницы
-  let whereToInsert = document.getElementById("col-before"); //Ищем, куда добавлять блоки
-  let preload = () => document.querySelector("body").classList.add("loaded"); //Функция preloaderа
+  let nextPage = getPage == "next" ? (page = page + 1) : (page = page - 1); // change page
+  let whereToInsert = document.getElementById("col-before"); //
 
   const button = document.getElementById("previousButton");
   if (page > 1) {
@@ -107,15 +82,14 @@ const updateBlock = function (getPage) {
   } else {
     button.disabled = true;
   }
-
-  document.querySelector("body").classList.remove("loaded"); //Отобразить прелоадер для прогрузки файлов
+  document.querySelector("body").classList.remove("loaded"); // adding preloading for page
   getGamesData(nextPage).then(function (value) {
     //Удаление текущих страниц
     for (key in value.results) {
       whereToInsert.removeChild(whereToInsert.childNodes[0]);
     }
     for (key in value.results) {
-      //-----------Добавление новых данных---------------
+      // --------------- Adding new data ---------------
       let div = document.createElement("div");
       div.className = "col";
       div.innerHTML = `
@@ -124,23 +98,38 @@ const updateBlock = function (getPage) {
           value.results[key].background_image
         }" class="card-img-top game-image" >
         <div class="card-body">
-          <h5 class="card-title game-title">${value.results[key].name} ${getRating(value.results[key].metacritic)}</h5>
+          <h5 class="card-title game-title">${
+            value.results[key].name
+          } ${getRating(value.results[key].metacritic)}</h5>
           <div class="game-info">
             <p class="card-text">Жанр: ${getGenres(value)}</p>
             <p class="card-text">Дата выхода: ${value.results[key].released}</p>
-            <b class="platforms" id="platforms">Платформы: ${getPlatforms(value)} </b>
-            <a class="platforms" href="#" onclick="addToPlayLater(${value.results[key].id})">Хочу пройти! </a>
-            <p class="card-text"><small class="text-muted">Последнее обновление ${value.results[key].updated.split("T", 1)}</small></p>
+            <b class="platforms" id="platforms">Платформы: ${getPlatforms(
+              value
+            )} </b>
+            <a class="platforms" href="#" onclick="addToFavourites(${
+              value.results[key].id
+            })">Хочу пройти! </a>
+            <p class="card-text"><small class="text-muted">Последнее обновление ${value.results[
+              key
+            ].updated.split("T", 1)}</small></p>
           </div>
-            <button class="btn btn-secondary detailed-info" type="button" data-bs-toggle="collapse" data-bs-target="#id${value.results[key].id}" aria-expanded="false" aria-controls="id${value.results[key].id}">В избранное</button>
-            <div class="collapse multi-collapse" id="id${value.results[key].id}">
+            <button class="btn btn-secondary detailed-info" type="button" data-bs-toggle="collapse" data-bs-target="#id${
+              value.results[key].id
+            }" aria-expanded="false" aria-controls="id${
+        value.results[key].id
+      }">В избранное</button>
+            <div class="collapse multi-collapse" id="id${
+              value.results[key].id
+            }">
               <div class="card text-white bg-dark mb-3">
                 Потом добавлю
               </div>
             </div>
       </div>`;
       whereToInsert.insertBefore(div, whereToInsert.childNodes[0]);
-      //-----------PRELOADER ПОКА НЕ ЗАГРУЗИТСЯ ИЗОБРАЖЕНИЕ-----
+      document.querySelector("body").classList.add("loaded"); // adding preloader
+      // Preload while pageis downloading
       let img = document.getElementsByTagName("img")[0];
       img.onload = () => {
         document.querySelector("body").classList.add("loaded");
@@ -149,19 +138,12 @@ const updateBlock = function (getPage) {
   });
 };
 
-const getRating = function (data) {
-  let rating = (data > 80) ? '<span id="rating" class="rating_good">'+ data +'</span>' :
-               (data < 40) ? '<span id="rating" class="ratring_bad">' + data + '</span>' :
-               (data == 'null') ? '<span id="rating" class="rating_bad"> 0 </span>' :
-               '<span id="rating" class="rating_normal">' + data + '</span>'
-    return rating
-}
-
+// --------------- Get the games and show them ---------------/
 const createBlock = function () {
   getFavouritesCount();
   getGamesData(page).then(function (value) {
     for (key in value.results) {
-      //-------Создаём и добавляем данные---------------
+      // --------------- Create and insert new data ---------------
       let div = document.createElement("div");
       let whereToInsert = document.getElementById("col-before");
       div.className = "col";
@@ -179,7 +161,7 @@ const createBlock = function () {
           </div>
           
             <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
-              <button type="button" class="btn btn-secondary btn-left"  onclick="addToPlayLater(${value.results[key].id})" style="border-top-left-radius: 0;">В избранное</button>
+              <button type="button" class="btn btn-secondary btn-left"  onclick="addToFavourites(${value.results[key].id})" style="border-top-left-radius: 0;">В избранное</button>
               <button type="button" class="btn btn-secondary">Прошёл</button>
               <button type="button" class="btn btn-secondary btn-right" style="border-top-right-radius: 0;">Хочу пройти</button>
             </div>
@@ -195,7 +177,7 @@ const createBlock = function () {
       //   </div>
       // </div>
     }
-    //-----------PRELOADER ПОКА НЕ ЗАГРУЗИТСЯ ИЗОБРАЖЕНИЕ-----
+    // Preload while pageis downloading 
     let img = document.getElementsByTagName("img")[0];
     img.onload = () => {
       document.querySelector("body").classList.add("loaded");
@@ -207,7 +189,7 @@ function showFavourites() {
   let names = [];
   for (let key in localStorage) {
     if (!localStorage.hasOwnProperty(key)) {
-      continue; // пропустит такие ключи, как "setItem", "getItem" и так далее
+      continue; // need to skip 'setItems' , 'getItem' etc . . .
     }
     let obj = JSON.parse(localStorage.getItem(key));
     if (obj.hasOwnProperty("name")) {
@@ -222,7 +204,7 @@ function getFavouritesCount() {
   let changedSpan = document.getElementsByTagName("span")[0];
   for (let key in localStorage) {
     if (!localStorage.hasOwnProperty(key)) {
-      continue; // пропустит такие ключи, как "setItem", "getItem" и так далее
+      continue;
     }
     count++;
   }
@@ -233,34 +215,13 @@ function getFavouritesCount() {
   }
 }
 
-let addToPlayLater = function (id) {
-  let gameId = id;
-  const toJSON = function (data) {
-    if (localStorage.getItem(gameId) !== null) {
-      alert("Эта игра уже добавлена");
-    } else {
-      let serialObj = JSON.stringify(data);
-      localStorage.setItem(gameId, serialObj);
-      let returnObj = JSON.parse(localStorage.getItem(gameId));
-      getFavouritesCount();
-      alert("Вы успешно добавили " + returnObj.name + " в избранное");
-      return returnObj;
-    }
-  };
-  const url = "https://api.rawg.io/api/games/";
-
-  fetch(url + gameId)
-    .then((response) => response.json())
-    .then((data) => toJSON(data));
-};
-
-const toTopButton = () => {
-  const button = document.getElementById("myBtn");
-  const condition =
-    document.body.scrollTop > 20 || document.documentElement.scrollTop > 20
-      ? (button.style.visibility = "visible")
-      : (button.style.visibility = "hidden");
-};
+const getRating = function (data) {
+  let rating = (data > 80) ? '<span id="rating" class="rating_good">'+ data +'</span>' :
+               (data < 40) ? '<span id="rating" class="ratring_bad">' + data + '</span>' :
+               (data == 'null') ? '<span id="rating" class="rating_bad"> 0 </span>' :
+               '<span id="rating" class="rating_normal">' + data + '</span>'
+    return rating
+}
 
 const getGenres = function (value) {
   let genres = [];
@@ -268,6 +229,14 @@ const getGenres = function (value) {
     genres.push(value.results[key].genres[keyS].name);
   }
   return genres.join(", ");
+};
+
+const getCount = function () {
+  getGamesData(page).then(function (value) {
+    // document.getElementById('quantityGames').innerHTML = value.count + ' '
+    document.getElementById("gameNumber").placeholder =
+      "В базе данных " + value.count + " игр";
+  });
 };
 
 const getPlatforms = function (value) {
@@ -330,6 +299,42 @@ const getPlatforms = function (value) {
   return gamePlatforms;
 };
 
+const addToFavourites = function (id) {
+  let gameId = id;
+  const toJSON = function (data) {
+    if (localStorage.getItem(gameId) !== null) {
+      alert("Эта игра уже добавлена");
+    } else {
+      let serialObj = JSON.stringify(data);
+      localStorage.setItem(gameId, serialObj);
+      let returnObj = JSON.parse(localStorage.getItem(gameId));
+      getFavouritesCount();
+      alert("Вы успешно добавили " + returnObj.name + " в избранное");
+      return returnObj;
+    }
+  };
+  const url = "https://api.rawg.io/api/games/";
+
+  fetch(url + gameId)
+    .then((response) => response.json())
+    .then((data) => toJSON(data));
+};
+
+
+// --------------- Showing the button after scrolldown ---------------/
+window.onscroll = () => {
+  toTopButton();
+};
+// --------------- Show to top button ---------------/
+const toTopButton = () => {
+  const button = document.getElementById("myBtn");
+  const condition =
+    document.body.scrollTop > 20 || document.documentElement.scrollTop > 20
+      ? (button.style.visibility = "visible")
+      : (button.style.visibility = "hidden");
+};
+
+getCount();
 createBlock();
 
 /*-------------------------------------TRASH----------------------------------*/
