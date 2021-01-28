@@ -48,7 +48,7 @@ function drawData (data) {
     console.log(data.results[key].name);
     // adding new data
     let li = document.createElement("li");
-    li.innerHTML = `<a class="dropdown-item" style="font-size: 12px;" href="${data.results[key].background_image}">${data.results[key].name}</a>`;
+    li.innerHTML = `<a class="dropdown-item" style="font-size: 12px;" href="${data.results[key].background_image}">${data.results[key].name}  ${(data.results[key].metacritic)!=null ? '- ' + data.results[key].metacritic : ''}</a>`;
     whereToInsert.insertBefore(li, whereToInsert.childNodes[0]);
   }
 }
@@ -75,6 +75,7 @@ const updateBlock = function (getPage) {
   window.scrollTo(0, 0);
   let nextPage = getPage == "next" ? (page = page + 1) : (page = page - 1); // change page
   let whereToInsert = document.getElementById("col-before"); //
+  let getItem = document.getElementById('')
 
   const button = document.getElementById("previousButton");
   if (page > 1) {
@@ -86,48 +87,32 @@ const updateBlock = function (getPage) {
   getGamesData(nextPage).then(function (value) {
     //Удаление текущих страниц
     for (key in value.results) {
-      whereToInsert.removeChild(whereToInsert.childNodes[0]);
+      whereToInsert.removeChild(whereToInsert.childNodes[1]);
     }
     for (key in value.results) {
       // --------------- Adding new data ---------------
       let div = document.createElement("div");
       div.className = "col";
       div.innerHTML = `
-      <div class="card text-white bg-dark mb-3">
-        <img id="test" src="${
-          value.results[key].background_image
-        }" class="card-img-top game-image" >
-        <div class="card-body">
-          <h5 class="card-title game-title">${
-            value.results[key].name
-          } ${getRating(value.results[key].metacritic)}</h5>
-          <div class="game-info">
-            <p class="card-text">Жанр: ${getGenres(value)}</p>
-            <p class="card-text">Дата выхода: ${value.results[key].released}</p>
-            <b class="platforms" id="platforms">Платформы: ${getPlatforms(
-              value
-            )} </b>
-            <a class="platforms" href="#" onclick="addToFavourites(${
-              value.results[key].id
-            })">Хочу пройти! </a>
-            <p class="card-text"><small class="text-muted">Последнее обновление ${value.results[
-              key
-            ].updated.split("T", 1)}</small></p>
-          </div>
-            <button class="btn btn-secondary detailed-info" type="button" data-bs-toggle="collapse" data-bs-target="#id${
-              value.results[key].id
-            }" aria-expanded="false" aria-controls="id${
-        value.results[key].id
-      }">В избранное</button>
-            <div class="collapse multi-collapse" id="id${
-              value.results[key].id
-            }">
-              <div class="card text-white bg-dark mb-3">
-                Потом добавлю
-              </div>
+      <div class="card text-white bg-dark h-100">
+        <img id="test" src="${value.results[key].background_image}" class="card-img-top game-image" >
+          <div class="card-body">
+            <h5 class="card-title game-title">${value.results[key].name} ${getRating(value.results[key].metacritic)} </h5>
+            <div class="game-info">
+              <p class="card-text">Жанр: ${getGenres(value)}</p>
+              <p class="card-text">Дата выхода: ${value.results[key].released}</p>
+              <b class="platforms" id="platforms">Платформы: ${getPlatforms(value)}</b>
+              <p class="card-text"><small class="text-muted">Последнее обновление ${value.results[key].updated.split("T", 1)}</small></p>
             </div>
-      </div>`;
-      whereToInsert.insertBefore(div, whereToInsert.childNodes[0]);
+          </div>
+      
+        <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
+        <button type="button" style="font-size: 0.875rem;" onclick="addToFavourites(${
+            value.results[key].id
+          })" class="btn btn-secondary">Добавить в избранное</button>
+        </div>
+       </div> `;
+      whereToInsert.appendChild(div);
       document.querySelector("body").classList.add("loaded"); // adding preloader
       // Preload while pageis downloading
       let img = document.getElementsByTagName("img")[0];
@@ -148,7 +133,7 @@ const createBlock = function () {
       let whereToInsert = document.getElementById("col-before");
       div.className = "col";
       div.innerHTML = `
-        <div class="card text-white bg-dark mb-3">
+        <div class="card text-white bg-dark h-100">
           <img id="test" src="${value.results[key].background_image}" class="card-img-top game-image" >
           <div class="card-body">
             <h5 class="card-title game-title">${value.results[key].name} ${getRating(value.results[key].metacritic)} </h5>
@@ -161,13 +146,13 @@ const createBlock = function () {
           </div>
           
             <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
-              <button type="button" class="btn btn-secondary btn-left"  onclick="addToFavourites(${value.results[key].id})" style="border-top-left-radius: 0;">В избранное</button>
-              <button type="button" class="btn btn-secondary">Прошёл</button>
-              <button type="button" class="btn btn-secondary btn-right" style="border-top-right-radius: 0;">Хочу пройти</button>
+              <button type="button" style="font-size: 0.875rem;" onclick="addToFavourites(${
+                value.results[key].id
+              })" class="btn btn-secondary">Добавить в избранное</button>
             </div>
         </div>  
         `;
-      whereToInsert.insertBefore(div, whereToInsert.childNodes[0]);
+      whereToInsert.appendChild(div);
       // console.log(value.results[key])
 
       // <button class="btn btn-secondary detailed-info" type="button" data-bs-toggle="collapse" data-bs-target="#id${value.results[key].id}" aria-expanded="false" aria-controls="id${value.results[key].id}">Подробнее</button>
@@ -201,7 +186,7 @@ function showFavourites() {
 
 function getFavouritesCount() {
   let count = 0;
-  let changedSpan = document.getElementsByTagName("span")[0];
+  let changedSpan = document.getElementById("favourite-counter");
   for (let key in localStorage) {
     if (!localStorage.hasOwnProperty(key)) {
       continue;
@@ -299,25 +284,38 @@ const getPlatforms = function (value) {
   return gamePlatforms;
 };
 
+function getDate() {
+  let today = new Date();
+  let dd = String(today.getDate()).padStart(2, '0');
+  let mm = String(today.getMonth() + 1).padStart(2, '0');
+  let hh = String(today.getHours()).padStart(2, '0');
+  let min = String(today.getMinutes()).padStart(2, '0');
+  let yyyy = today.getFullYear();
+
+  today = dd + '/' + mm + '/' + yyyy + ', ' + hh + ':' + min + ' (MSK)';
+  return today
+}
+
 const addToFavourites = function (id) {
-  let gameId = id;
-  const toJSON = function (data) {
-    if (localStorage.getItem(gameId) !== null) {
-      alert("Эта игра уже добавлена");
-    } else {
-      let serialObj = JSON.stringify(data);
-      localStorage.setItem(gameId, serialObj);
-      let returnObj = JSON.parse(localStorage.getItem(gameId));
-      getFavouritesCount();
-      alert("Вы успешно добавили " + returnObj.name + " в избранное");
-      return returnObj;
-    }
-  };
   const url = "https://api.rawg.io/api/games/";
+  let gameId = id;
 
   fetch(url + gameId)
     .then((response) => response.json())
     .then((data) => toJSON(data));
+  let currentTime = getDate();
+  //
+  const toJSON = function (data) {
+    if (localStorage.getItem(gameId) !== null) {
+      alert("Эта игра уже добавлена");
+    } else {
+      data["whenAdded"] = currentTime;
+      let serialObj = JSON.stringify(data);
+      localStorage.setItem(gameId, serialObj);
+      getFavouritesCount();
+      alert("Вы успешно добавили " + data.name + " в избранное");
+    }
+  };
 };
 
 
