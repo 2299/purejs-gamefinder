@@ -11,11 +11,6 @@
 </head>
 
 <body>
-  <div id="loader-wrapper">
-    <div id="loader"></div>
-    <div class="loader-section section-left"></div>
-    <div class="loader-section section-right"></div>
-  </div>
 
 <header class="mb-auto">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -47,49 +42,22 @@
   </nav>
 </header>
 
-<main class="inner cover" role="main">
-  <div class="container">
+<div class="container">
     <div class="container-heading">
-      <h5 class="display-4 container-heading-text">ИгроПОИСК</h5>
-      <p class="lead subheading-text">Добавляй в избранное, комментируй, делись с друзьями!</p>
-      <div class="filter_selects">
-        <div class="filter_order_by">
-          <select class="form-select" id="orderby-filter" onchange="orderbyFilter(this.value)" aria-label="Default select example">
-            <option value="" selected disabled">Сортировать по:</option>
-            <option value="popularity">По популярности</option>
-            <option value="released">По дате</option>
-            <option value="name">По имени</option>
-            <option value="metacritic">По оценкам</option>
-          </select>
+        <h5 class="display-4 container-heading-text">ИгроПОИСК</h5>
+        <p class="lead subheading-text">Добавляй в избранное, комментируй, делись с друзьями!</p>
+    </div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html" class="link-light">Главная</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Избранное</li>
+        </ol>
+    </nav>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-4 g-4" id="col-before">
         </div>
-        <div class="filter_platforms">
-          <select class="form-select" onchange="alert('Не работает, но вы выбрали '+this.value+' и всё скоро будет работать')" aria-label="Default select example">
-            <option selected>Платформы</option>
-            <option value="PC">PC</option>
-            <option value="Playstation">Playstation</option>
-            <option value="Xbox">Xbox</option>
-          </select>
-        </div>
-      </div>
     </div>
-    <div class="row row-cols-1 row-cols-md-4 g-4" id="col-before">
-    </div>
-    <div class="row mt-5">
-      <!-- Buttons -->
-      <div class="btn-group" role="group" aria-label="Basic outlined example">
-        <button disabled type="button" id="previousButton" class="btn btn-lg btn-secondary"
-          onclick="updateBlock('previous')" href="#" aria-label="Предыдущая страница">
-          <span aria-hidden="true">Предыдущая страница</span>
-        </button>
-        <!-- ----------------- -->
-        <button type="button" href="#" class="btn btn-lg btn-secondary" onclick="updateBlock('next')" href="#"
-          aria-label="Следующая страница">
-          <span aria-hidden="true">Следующая страница</span>
-        </button>
-      </div>
-    </div>
-  </div>
-</main>
+</div>
 
 <footer class="text-muted py-5 footer">
   <hr>
@@ -108,7 +76,7 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
-  <script src="js/main.js"></script>
 </body>
 
 </html>
+<script src="js/my_library.js"></script>

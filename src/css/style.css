@@ -1,0 +1,296 @@
+.container-heading {
+  color: #fff;
+}
+body {
+  background-color: #222226;
+}
+.logo {
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.container-heading-text {
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+.subheading-text {
+  font-size: 1.25rem;
+  font-weight: 300;
+}
+.breadcrumb > .breadcrumb-item > a {
+  font-size: 14px;
+}
+
+.filter_selects {
+  display: flex;
+  margin: 2rem auto;
+}
+.filter_selects select {
+  font-size: 14px;
+}
+.filter_order_by {
+  margin-right: 0.5rem !important;
+}
+
+.game-title {
+  font-weight: 800;
+  font-size: 22px;
+}
+
+.game-info {
+  font-size: 12px;
+}
+
+.detailed-info {
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.footer {
+  font-size: 12px;
+}
+
+#loader-wrapper {
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:1000;
+}
+
+#loader {
+  display:block;
+  position: relative;
+  top:50%;
+  left:50%;
+  width:150px;
+  height:150px;
+  margin:-75px 0 0 -75px;
+  border:3px solid transparent;
+  border-top-color:white;
+  border-radius:100%;
+  -webkit-animation: spin 2s linear infinite;
+          animation: spin 2s linear infinite;
+  z-index:1001;
+}
+
+#loader:before {
+  content:"";
+  position: absolute;
+  top:5px;
+  left:5px;
+  right:5px;
+  bottom:5px;
+  border:3px solid transparent;
+  border-top-color: yellow;
+  border-radius:100%;
+  -webkit-animation: spin 3s linear infinite;
+          animation: spin 3s linear infinite;
+}
+#loader:after {
+  content:"";
+  position: absolute;
+  top:12px;
+  left:12px;
+  right:12px;
+  bottom:12px;
+  border:3px solid transparent;
+  border-top-color:orange;
+  border-radius:100%;
+  -webkit-animation: spin 1.5s linear infinite;
+          animation: spin 1.5s linear infinite;
+}
+@-webkit-keyframes spin {
+  0%   { 
+    -webkit-transform: rotate(0deg); 
+      -ms-transform: rotate(0deg); 
+          transform: rotate(0deg);
+  }
+  100% { 
+    -webkit-transform: rotate(360deg); 
+      -ms-transform: rotate(360deg); 
+          transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  0%   { 
+    -webkit-transform: rotate(0deg); 
+      -ms-transform: rotate(0deg); 
+          transform: rotate(0deg);
+  }
+  100% { 
+    -webkit-transform: rotate(360deg); 
+      -ms-transform: rotate(360deg); 
+          transform: rotate(360deg);
+  }
+}
+
+#loader-wrapper .loader-section {
+  position:fixed;
+  top:0;
+  background:#333;
+  width:51%;
+  height:100%;
+  z-index:1000;
+}
+
+#loader-wrapper .loader-section.section-left {
+  left:0
+}
+#loader-wrapper .loader-section.section-right {
+  right:0;
+}
+  
+/* Loaded Styles */
+.loaded #loader-wrapper .loader-section.section-left {
+  transform: translateX(-100%);
+  transition: all 0.7s 0.3s cubic-bezier(0.645,0.045,0.355,1.000);
+}
+.loaded #loader-wrapper .loader-section.section-right {
+  transform: translateX(100%);
+  transition: all 0.7s 0.3s cubic-bezier(0.645,0.045,0.355,1.000);
+}
+.loaded #loader {
+  opacity: 0;
+  transition: all 0.3s ease-out;
+}
+.loaded #loader-wrapper {
+  visibility: hidden;
+  transform:translateY(-100%);
+  transition: all 0.3s 1s ease-out;
+}
+
+.platform_xbox {
+  background-image: url(../img/xbox.svg);
+}
+
+.platform_playstation {
+  background-image: url(../img/playstation.svg);
+}
+
+.platform_mac {
+  background-image: url(../img/apple.svg);
+}
+
+.platform_ios {
+  background-image: url(../img/ios.svg);
+}
+
+.platform_linux {
+  background-image: url(../img/linux.svg);
+}
+
+.platform_android {
+  background-image: url(../img/android.svg);
+}
+
+.platform_pc {
+  background-image: url(../img/windows.svg);
+}
+
+.platform_nintendo {
+  background-image: url(../img/nintendo.svg);
+}
+
+.platform_display {
+  filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(252deg) brightness(103%) contrast(101%);
+  width:  15px;
+  height: 15px;
+  margin: 5px;
+}
+
+.platforms {
+  display: flex;
+  -webkit-box-flex: 1;
+}
+
+input[type="search"] {
+  border-radius: 25px;
+  -webkit-transition: .35s ease-in-out;
+  transition:  .35s ease-in-out;
+}
+
+/* input[type="search"]:focus {
+  width: 1000px;
+  border-radius: 40px;
+  outline: 0;
+} */
+
+#myBtn {
+  visibility: hidden;
+  transition: visibility 0s, opacity 0.5s linear;
+  width: 50px;
+  position: fixed; /* Fixed/sticky position */
+  bottom: 30px; /* Place the button at the bottom of the page */
+  right: 30px; /* Place the button 30px from the right */
+  z-index: 99; /* Make sure it does not overlap */
+  border: none; /* Remove borders */
+  outline: none; /* Remove outline */
+  background-color: #333332; /* Set a background color */
+  cursor: pointer; /* Add a mouse pointer on hover */
+}
+
+
+#myBtn:hover {
+  background-color: #555; /* Add a dark-grey background on hover */
+}
+
+#myBtn:focus {
+  border: 0;
+}
+/* 
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.4em;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  
+} */
+.btn-top {
+  font-size: 12px;
+
+}
+.rating_bad {
+  border: 1px solid #ff2f2f;
+}
+
+.rating_normal {
+  border: 1px solid #f3ff45;
+}
+
+.rating_good {
+  border: 1px solid #ADFF2F;
+}
+
+#rating {
+  float:right;
+  clear:right;
+  font-size: 12px;
+  line-height: 19px;
+  font-weight: 500;
+  padding: .5rem;
+  font-size: 1rem;
+  border-radius: .25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+
+}
+.badge-dark {
+  margin: 5px;
+  width: 50%;
+  height: 50%;
+  color: #fff;
+}
+#gameNumber {
+  font-size: 12px;
+  margin: 1rem auto;
+}
+
+.badge-dark[href]:focus,
+.badge-dark[href]:hover {
+  color: #fff;
+  text-decoration: none;
+  background-color: #1d2124;
+}

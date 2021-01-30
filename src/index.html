@@ -1,0 +1,48 @@
+@@include('parts/header.html')
+@@include('parts/preloader.html')
+<main class="inner cover" role="main">
+  <div class="container">
+    <div class="container-heading">
+      <h5 class="display-4 container-heading-text">ИгроПОИСК</h5>
+      <p class="lead subheading-text">Добавляй в избранное, комментируй, делись с друзьями!</p>
+      <div class="filter_selects">
+        <div class="filter_order_by">
+          <select class="form-select" id="orderby-filter" onchange="orderbyFilter(this.value)" aria-label="Default select example">
+            <option value="" selected disabled">Сортировать по:</option>
+            <option value="popularity">По популярности</option>
+            <option value="released">По дате</option>
+            <option value="name">По имени</option>
+            <option value="metacritic">По оценкам</option>
+          </select>
+        </div>
+        <div class="filter_platforms">
+          <select class="form-select" onchange="alert('Не работает, но вы выбрали '+this.value+' и всё скоро будет работать')" aria-label="Default select example">
+            <option selected>Платформы</option>
+            <option value="PC">PC</option>
+            <option value="Playstation">Playstation</option>
+            <option value="Xbox">Xbox</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-5 g-4" id="col-before">
+    </div>
+    <div class="row mt-5">
+      <!-- Buttons -->
+      <div class="btn-group" role="group" aria-label="Basic outlined example">
+        <button disabled type="button" id="previousButton" class="btn btn-lg btn-secondary"
+          onclick="updateBlock('previous')" href="#" aria-label="Предыдущая страница">
+          <span aria-hidden="true">Предыдущая страница</span>
+        </button>
+        <!-- ----------------- -->
+        <button type="button" href="#" class="btn btn-lg btn-secondary" onclick="updateBlock('next')" href="#"
+          aria-label="Следующая страница">
+          <span aria-hidden="true">Следующая страница</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+@@include('parts/footer.html')
+<script src="js/main.js"></script>
